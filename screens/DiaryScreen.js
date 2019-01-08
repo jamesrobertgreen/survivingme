@@ -16,20 +16,23 @@ import Swiper from 'react-native-swiper'
 
 class DiaryEntry extends React.Component{
 
-  state = {time: ''}
+  state = {time: '',
+           text: ''
+          }
 
   render(){
     const onPressAdd = () => {
-      Alert.alert(
-        'Time = ',
-        this.state.time,
-        [
-          {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ],
-        { cancelable: false }
-      )
+      const newEntry = {key: this.state.time, value: this.state.text};
+      this.props.callback(newEntry);
+
+      // Alert.alert(
+      //   'Time = ' + this.state.time ,
+      //   'Text = ' + this.state.text,
+      //   [
+      //     {text: 'Entry Added', onPress: () => console.log('OK Pressed')},
+      //   ],
+      //   { cancelable: false }
+      // )
     }
     return (
         <View style={styles.diaryEntry}>
@@ -65,9 +68,11 @@ class DiaryEntry extends React.Component{
           </Picker>
         </View>
 
-        <TextInput multiline = {true} numberOfLines = {4} style={styles.input}></TextInput>
+        <TextInput onChangeText={(text) => this.setState({text})}
+        value={this.state.text} multiline = {true} numberOfLines = {4} style={styles.input}></TextInput>
 
         <Button onPress={onPressAdd} style={styles.button} title="Add Entry"></Button>
+        {/* <Button onPress={this.props.callback({key: this.state.time, value: this.state.text})} style={styles.button} title="Add Entry2"></Button> */}
       </View>
   );
   }
@@ -78,40 +83,24 @@ export default class DiaryScreen extends React.Component {
     title: 'Diary',
   };
 
+  state = {
+    diaryData: [],
+  };
+
+  // componentDidMount(){
+  //   this.setState({diaryData: ''})
+  // }
+
+myCallback = (diaryEntry) => {
+  console.log(diaryEntry)
+  // this.setState({diaryData : this.state.diaryData.push([{key:'test1',value: 'test2'}])});
+
+  this.setState({ diaryData: [...this.state.diaryData, diaryEntry]});
+}
+
   render() {
-    var testData = [ {key: 'entry1'},
-    {key: 'entry2'},
-    {key: 'entry3'},
-    {key: 'entry4'},
-    {key: 'entry5'},
-    {key: 'entry6'},
-    {key: 'entry7'},
-    {key: 'entry8'},
-    {key: 'entry9'},
-    {key: 'entry10'},
-    {key: 'entry11'},
-    {key: 'entry12'},
-    {key: 'entry13'},
-    {key: 'entry14'},
-    {key: 'entry15'},
-    {key: 'entry16'},
-    {key: 'entry17'},
-    {key: 'entry18'},
-    {key: 'entry19'},
-    {key: 'entry20'},
-    {key: 'entry21'},
-    {key: 'entry22'},
-    {key: 'entry23'},
-    {key: 'entry24'},
-    {key: 'entry25'},
-    {key: 'entry26'},
-    {key: 'entry27'},
-    {key: 'entry28'},
-    {key: 'entry29'},
-    {key: 'entry30'},
-    {key: 'entry31'},
-    {key: 'entry32'},
-    ];
+    
+
     return (
 
 
@@ -119,18 +108,20 @@ export default class DiaryScreen extends React.Component {
             
             <View style={styles.slide1}>
               <Text style={styles.text}>Day 1</Text>
-              <DiaryEntry/>
-              <FlatList style={styles.flatList} data={testData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key}</Text>}/>
+              <DiaryEntry callback={this.myCallback}/>
+
+
+              <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/>
 
             </View>
-            <View style={styles.slide2}>
+            {/* <View style={styles.slide2}>
               <Text style={styles.text}>Day 2</Text>
               <DiaryEntry/>
             </View>
             <View style={styles.slide3}>
               <Text style={styles.text}>Day 3</Text>
               <DiaryEntry/>
-            </View>
+            </View> */}
           </Swiper>
     );
   }
