@@ -15,25 +15,31 @@ import Swiper from 'react-native-swiper'
 
 
 class DiaryEntry extends React.Component{
-
   state = {time: '',
            text: ''
-          }
-
+          };
   render(){
     const onPressAdd = () => {
-      const newEntry = {key: this.state.time, value: this.state.text};
-      this.props.callback(newEntry);
-
-      // Alert.alert(
-      //   'Time = ' + this.state.time ,
-      //   'Text = ' + this.state.text,
-      //   [
-      //     {text: 'Entry Added', onPress: () => console.log('OK Pressed')},
-      //   ],
-      //   { cancelable: false }
-      // )
-    }
+      if( this.state.time === '' ){
+        error('Please enter a time');
+      } else {
+        if( this.state.text === ''){
+          error('Please enter a diary entry');
+        }else{
+          this.props.callback(this.state.time,this.state.text);
+        }
+      }
+    };
+    const error = (message) => {
+      Alert.alert(
+        'Error' ,
+        message,
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+    };
     return (
         <View style={styles.diaryEntry}>
         <View style={styles.fieldContainer}>
@@ -91,37 +97,43 @@ export default class DiaryScreen extends React.Component {
   //   this.setState({diaryData: ''})
   // }
 
-myCallback = (diaryEntry) => {
-  console.log(diaryEntry)
-  // this.setState({diaryData : this.state.diaryData.push([{key:'test1',value: 'test2'}])});
-
-  this.setState({ diaryData: [...this.state.diaryData, diaryEntry]});
+myCallback = (time,text) => {
+  // console.log(diaryEntry)
+  if (this.state.diaryData.filter( (e) => e.key === time).length > 0){
+      Alert.alert(
+        'Error' ,
+        'Entry already exists',
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+  } else{
+    this.setState({ diaryData: [...this.state.diaryData, {key: time, value: text}]});
+  }
 }
 
   render() {
-    
-
     return (
-
-
           <Swiper style={styles.wrapper} showsButtons>
             
             <View style={styles.slide1}>
               <Text style={styles.text}>Day 1</Text>
               <DiaryEntry callback={this.myCallback}/>
-
-
               <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/>
 
             </View>
-            {/* <View style={styles.slide2}>
+            <View style={styles.slide2}>
               <Text style={styles.text}>Day 2</Text>
-              <DiaryEntry/>
+              {/* <DiaryEntry callback={this.myCallback}/> */}
+              {/* <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
             </View>
             <View style={styles.slide3}>
               <Text style={styles.text}>Day 3</Text>
-              <DiaryEntry/>
-            </View> */}
+              {/* <DiaryEntry callback={this.myCallback}/> */}
+              {/* <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
+
+            </View>
           </Swiper>
     );
   }
