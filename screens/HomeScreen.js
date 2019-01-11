@@ -3,7 +3,8 @@ import {
   ImageBackground ,
   StyleSheet,
   Text,
-  View
+  View,
+  Button,
 } from 'react-native';
 
 import Swiper from 'react-native-swiper'
@@ -30,11 +31,18 @@ class Page1 extends React.Component{
 
 
 class Page extends React.Component{
+  static navigationOptions = {
+    header: null,
+  };
   render(){
+    const {navigate} = this.props.navigation;
     return (
             <View style={styles.headingContainer}>
               <Text style={styles.headingText}>{this.props.content}</Text>
               <Text style={styles.headingSubText}>Lorem ipsum</Text>
+              <Button
+                title={this.props.linkText}
+                onPress={() => navigate(this.props.linkPath)}/>
             </View>
     )
   }
@@ -53,16 +61,16 @@ export default class HomeScreen extends React.Component {
             <Page1/>
           </View>
           <View style={styles.pageStyle2}>
-            <Page content={"Page 1"}/>
+            <Page navigation={this.props.navigation} content={"Page 1"} linkText={"Go to diary"} linkPath={"Diary"}/>
           </View>
           <View style={styles.pageStyle1}>
-            <Page content={"Page 2"}/>
+            <Page navigation={this.props.navigation} content={"Page 2"} linkText={"Go to personal skills"} linkPath={"PersonalSkills"}/>
           </View>
           <View style={styles.pageStyle2}>
-            <Page content={"Page 3"}/>
+            <Page navigation={this.props.navigation} content={"Page 3"} linkText={"Go to Home"} linkPath={"Diary"}/>
           </View>
           <View style={styles.pageStyle1}>
-            <Page content={"Page 4"}/>
+            <Page navigation={this.props.navigation} content={"Page 4"} linkText={"Go to diary"} linkPath={"Diary"}/>
           </View>
         </Swiper>
       
