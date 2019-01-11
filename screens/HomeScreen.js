@@ -3,12 +3,43 @@ import {
   ImageBackground ,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
+
+import Swiper from 'react-native-swiper'
+
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import { primaryText, homeBackground } from '../constants/Colors';
+
+class Page1 extends React.Component{
+  render(){
+    return (
+        <ImageBackground source={require('../assets/images/kites.png')} style={styles.imageBackground}>
+          <View style={styles.headingContainer}>
+            <View style={styles.headingTextContainer}>
+              <Text style={styles.headingText}>Surviving Me</Text>
+              <Text style={styles.headingSubText}>Living with a life-changing diagnosis</Text>
+            </View>
+          </View>
+        </ImageBackground>
+    )
+  }
+}
+
+
+class Page extends React.Component{
+  render(){
+    return (
+            <View style={styles.headingContainer}>
+              <Text style={styles.headingText}>{this.props.content}</Text>
+              <Text style={styles.headingSubText}>Lorem ipsum</Text>
+            </View>
+    )
+  }
+}
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -17,18 +48,26 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.contentContainer}>
-          <ImageBackground source={require('../assets/images/kites.png')} style={styles.imageBackground}>
-            <View style={styles.headingContainer}>
-              <View style={styles.headingTextContainer}>
-                <Text style={styles.headingText}>Surviving Me</Text>
-                <Text style={styles.headingSubText}>Living with a life-changing diagnosis</Text>
-              </View>
-            </View>
-          </ImageBackground>
-        </View>
-      </View>
+      <Swiper style={styles.container} showsButtons>
+          <View style={styles.pageStyle1}>
+            <Page1/>
+          </View>
+          <View style={styles.pageStyle2}>
+            <Page content={"Page 1"}/>
+          </View>
+          <View style={styles.pageStyle1}>
+            <Page content={"Page 2"}/>
+          </View>
+          <View style={styles.pageStyle2}>
+            <Page content={"Page 3"}/>
+          </View>
+          <View style={styles.pageStyle1}>
+            <Page content={"Page 4"}/>
+          </View>
+        </Swiper>
+      
+      // <ScrollView>
+      // </ScrollView>
     );
   }
 }
@@ -42,9 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#9bbee4',
-  },
-  contentContainer: {
-    flex: 0,
   },
   imageBackground:{
     width: '100%', 
@@ -67,5 +103,13 @@ const styles = StyleSheet.create({
   headingSubText: {
     color: '#FFF',
     fontSize: 20,
+  },
+  pageStyle1: {
+    flex: 1,
+    backgroundColor: '#9bbee4'
+  },
+  pageStyle2: {
+    flex: 1,
+    backgroundColor: '#a29bfe'
   },
 });
