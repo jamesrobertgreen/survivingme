@@ -88,20 +88,20 @@ class SoundPage extends React.Component{
       <View style={styles.headingContainer}>
       <Text style={styles.headingText}>{this.props.content}</Text>
       <Text style={styles.headingSubText}>Lorem ipsum</Text>
-      <View style={styles.buttons}>
+      <View style={styles.buttonContainer}>
         <Button onPress={playSound} title="Play"></Button>
       </View>
-      <View style={styles.buttons}>
-        <Button style={styles.buttons} onPress={stopSound} title="Stop"></Button>
+      <View style={styles.buttonContainer}>
+        <Button style={styles.buttonContainer} onPress={stopSound} title="Stop"></Button>
       </View>
-      <View style={styles.buttons}>
+      <View style={styles.buttonContainer}>
         <HyperLink title={"Link to your store"} url={"https://survivingme.org/shop/"}/>
       </View>
-      <View style={styles.buttons}>
-        <HyperLink title={"Link to item on your website"} url={"https://survivingme.org/product/audio-track-3/"}/>
+      <View style={styles.buttonContainer}>
+        <HyperLink title={"Item in your store"} url={"https://survivingme.org/product/audio-track-3/"}/>
       </View>
-      <View style={styles.buttons}>
-        <HyperLink title={"Link to beatles on itunes website"} url={"https://itunes.apple.com/gb/artist/the-beatles/136975"}/>
+      <View style={styles.buttonContainer}>
+        <HyperLink title={"Beatles on itunes"} url={"https://itunes.apple.com/gb/artist/the-beatles/136975"}/>
       </View>
     </View>
 
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#a29bfe'
   },
-  buttons:{
+  buttonContainer:{
     paddingBottom: 10,
   },
   title: {
