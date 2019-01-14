@@ -5,6 +5,8 @@ import {
   TextInput,
   Button,
   View,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   SwipeableFlatList,
@@ -41,6 +43,11 @@ class DiaryEntry extends React.Component{
     return (
         <View style={styles.diaryEntry}>
         <View style={styles.fieldContainer}>
+          <KeyboardAvoidingView behavior="padding">
+          <Text style={styles.label}>Diary Entry:</Text>
+            <TextInput placeholder={'Add Your Diary Entry Here'} onChangeText={(text) => this.setState({text})}
+                      value={this.state.text} multiline = {true} numberOfLines = {4} style={styles.input}/>
+          </KeyboardAvoidingView>
           <Text style={styles.label}>Time:</Text>
           <Picker style={styles.input} selectedValue={this.state.time}
                   onValueChange={(itemValue) => this.setState(  {time : itemValue} )}>
@@ -70,14 +77,8 @@ class DiaryEntry extends React.Component{
             <Picker.Item label="23:00" value="2300" />
             <Picker.Item label="00:00" value="0000" />
           </Picker>
-
-
-          <TextInput onChangeText={(text) => this.setState({text})}
-          value={this.state.text} multiline = {true} numberOfLines = {4} style={styles.input}></TextInput>
           <Button onPress={onPressAdd} style={styles.button} title="Add Entry"></Button>
         </View>
-
-
       </View>
   );
   }
@@ -148,9 +149,7 @@ myCallback = (time,text) => {
 
   render() {
     return (
-          <View style={styles.container}>
-            <View>
-              <Text style={styles.text}>Day 1</Text>
+          <ScrollView style={styles.container}>
               <DiaryEntry callback={this.myCallback}/>
               <SwipeableFlatList
                   data={this.state.diaryData}
@@ -158,9 +157,7 @@ myCallback = (time,text) => {
                   maxSwipeDistance={160}
                   renderItem={this._renderItem.bind(this)}
                   renderQuickActions={this._renderQuickActions.bind(this)}/>
-              {/* <SwipeableFlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
-            </View>
-          </View>
+          </ScrollView>
     );
   }
 }
@@ -177,18 +174,20 @@ const styles = StyleSheet.create({
   containerContent:{
     margin: 10
   },
-  diaryEntry:{
-
-  },
-  button:{
-
-  },
   input:{
     backgroundColor: '#FFF',
     borderColor: 'gray',
     borderWidth: 1,
     paddingLeft: 2,
     margin: 5
+  },
+  inputText:{
+    backgroundColor: '#FFF',
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingLeft: 2,
+    margin: 5,
+    height: 100
   },
   fieldContainer:{
     padding:20
@@ -203,18 +202,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold'
-  },
-  flatList:{
-    backgroundColor: '#FFF',
-    color: '#000',
-  },
-  flatListItem:{
-    backgroundColor: '#dfe6e9',
-    color: '#000',
-    paddingLeft: 10,
-    borderColor: '#000',
-    borderWidth: 1,
-    fontSize: 20,
   },
 
 
