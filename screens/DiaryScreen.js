@@ -5,14 +5,12 @@ import {
   TextInput,
   Button,
   View,
-  ScrollView,
   StyleSheet,
   Text,
-  FlatList,
+  SwipeableFlatList,
+  TouchableHighlight,
+  Image
 } from 'react-native';
-
-import Swiper from 'react-native-swiper'
-
 
 class DiaryEntry extends React.Component{
   state = {time: '',
@@ -44,7 +42,7 @@ class DiaryEntry extends React.Component{
         <View style={styles.diaryEntry}>
         <View style={styles.fieldContainer}>
           <Text style={styles.label}>Time:</Text>
-          <Picker selectedValue={this.state.time} style={styles.picker}
+          <Picker style={styles.input} selectedValue={this.state.time}
                   onValueChange={(itemValue) => this.setState(  {time : itemValue} )}>
             <Picker.Item label="Please select a time..." value="" />
             <Picker.Item label="01:00" value="0100" />
@@ -72,13 +70,14 @@ class DiaryEntry extends React.Component{
             <Picker.Item label="23:00" value="2300" />
             <Picker.Item label="00:00" value="0000" />
           </Picker>
+
+
+          <TextInput onChangeText={(text) => this.setState({text})}
+          value={this.state.text} multiline = {true} numberOfLines = {4} style={styles.input}></TextInput>
+          <Button onPress={onPressAdd} style={styles.button} title="Add Entry"></Button>
         </View>
 
-        <TextInput onChangeText={(text) => this.setState({text})}
-        value={this.state.text} multiline = {true} numberOfLines = {4} style={styles.input}></TextInput>
 
-        <Button onPress={onPressAdd} style={styles.button} title="Add Entry"></Button>
-        {/* <Button onPress={this.props.callback({key: this.state.time, value: this.state.text})} style={styles.button} title="Add Entry2"></Button> */}
       </View>
   );
   }
@@ -93,57 +92,87 @@ export default class DiaryScreen extends React.Component {
     diaryData: [],
   };
 
-  // componentDidMount(){
-  //   this.setState({diaryData: ''})
-  // }
+  _renderItem = function({item}){
+    return (
+      <View style={styles.row}>
+        <Image style={styles.rowIcon} source={item.icon} />
+        <View style={styles.rowData}>
+          <Text style={styles.rowDataText}>{item.key} - {item.data}</Text>
+        </View>
+      </View>
+    );
+  };
+  
+  _renderQuickActions = function({item}){
+    return (
+      <View style={styles.actionsContainer}>
+        <TouchableHighlight
+          style={styles.actionButton}
+          onPress={() => {
+            Alert.alert(
+              'Tips',
+              'You could do something with this edit action!',
+            );
+          }}>
+          <Text style={styles.actionButtonText}>Edit</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={[styles.actionButton, styles.actionButtonDestructive]}
+          onPress={() => {
+            Alert.alert(
+              'Tips',
+              'You could do something with this remove action!',
+            );
+          }}>
+          <Text style={styles.actionButtonText}>Remove</Text>
+        </TouchableHighlight>
+      </View>
+    );
+}
 
 myCallback = (time,text) => {
   // console.log(diaryEntry)
-  if (this.state.diaryData.filter( (e) => e.key === time).length > 0){
-      Alert.alert(
-        'Error' ,
-        'Entry already exists',
-        [
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ],
-        { cancelable: false }
-      )
-  } else{
-    this.setState({ diaryData: [...this.state.diaryData, {key: time, value: text}]});
+    if (this.state.diaryData.filter( (e) => e.key === time).length > 0){
+        Alert.alert(
+          'Error' ,
+          'Entry already exists',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+    } else{
+      this.setState({ diaryData: [...this.state.diaryData, {key: time, icon: require('../assets/images/kites.png'), data: text}]});
+    }
   }
-}
 
   render() {
     return (
-          <Swiper style={styles.wrapper} showsButtons>
-            
-            <View style={styles.slide1}>
+          <View style={styles.container}>
+            <View>
               <Text style={styles.text}>Day 1</Text>
               <DiaryEntry callback={this.myCallback}/>
-              <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/>
-
+              <SwipeableFlatList
+                  data={this.state.diaryData}
+                  bounceFirstRowOnMount={false}
+                  maxSwipeDistance={160}
+                  renderItem={this._renderItem.bind(this)}
+                  renderQuickActions={this._renderQuickActions.bind(this)}/>
+              {/* <SwipeableFlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
             </View>
-            <View style={styles.slide2}>
-              <Text style={styles.text}>Day 2</Text>
-              {/* <DiaryEntry callback={this.myCallback}/> */}
-              {/* <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
-            </View>
-            <View style={styles.slide3}>
-              <Text style={styles.text}>Day 3</Text>
-              {/* <DiaryEntry callback={this.myCallback}/> */}
-              {/* <FlatList style={styles.flatList} data={this.state.diaryData} renderItem={({item}) => <Text style={styles.flatListItem}>{item.key} - {item.value}</Text>}/> */}
-
-            </View>
-          </Swiper>
+          </View>
     );
   }
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff',
+    backgroundColor: '#9bbee4'
   },
   containerContent:{
     margin: 10
@@ -159,31 +188,16 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     paddingLeft: 2,
-  },
-  picker:{
-    backgroundColor: '#FFF',
-    // height: 50, width: 100
+    margin: 5
   },
   fieldContainer:{
-
+    padding:20
   },
   label:{
 
   },
 
   wrapper: {
-  },
-  slide1: {
-    flex: 1,
-    backgroundColor: '#9bbee4'
-  },
-  slide2: {
-    flex: 1,
-    backgroundColor: '#74b9ff'
-  },
-  slide3: {
-    flex: 1,
-    backgroundColor: '#a29bfe'
   },
   text: {
     color: '#fff',
@@ -201,7 +215,45 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 1,
     fontSize: 20,
-  }
+  },
+
+
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#F6F6F6',
+  },
+  rowIcon: {
+    width: 64,
+    height: 64,
+    marginRight: 20,
+  },
+  rowData: {
+    flex: 1,
+  },
+  rowDataText: {
+    fontSize: 24,
+  },
+  actionsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  actionButton: {
+    padding: 10,
+    width: 80,
+    backgroundColor: '#999999',
+  },
+  actionButtonDestructive: {
+    backgroundColor: '#FF0000',
+  },
+  actionButtonText: {
+    textAlign: 'center',
+  },
 
 });
 
