@@ -148,7 +148,6 @@ export default class HomeScreen extends React.Component {
   render() {
 
     return (
-      <View style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow:1}}>
           <View style={styles.pageStyle1}>
             <Page1/>
@@ -164,8 +163,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
         </ScrollView>
-        </View>
-
+        
     );
   }
 }
