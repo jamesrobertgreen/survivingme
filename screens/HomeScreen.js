@@ -6,7 +6,8 @@ import {
   View,
   Button,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Linking
 } from 'react-native';
 
 
@@ -93,9 +94,49 @@ class SoundPage extends React.Component{
       <View style={styles.buttons}>
         <Button style={styles.buttons} onPress={stopSound} title="Stop"></Button>
       </View>
+      <View style={styles.buttons}>
+        <HyperLink title={"Link to your store"} url={"https://survivingme.org/shop/"}/>
+      </View>
+      <View style={styles.buttons}>
+        <HyperLink title={"Link to item on your website"} url={"https://survivingme.org/product/audio-track-3/"}/>
+      </View>
+      <View style={styles.buttons}>
+        <HyperLink title={"Link to beatles on itunes website"} url={"https://itunes.apple.com/gb/artist/the-beatles/136975"}/>
+      </View>
     </View>
 
     )
+  }
+}
+
+
+
+class HyperLink extends React.Component {
+
+  constructor(){
+      super();
+      this._goToURL = this._goToURL.bind(this);
+  }
+
+
+  render() {
+
+    const { title} = this.props;
+
+    return(
+      <Button style={styles.title} onPress={this._goToURL} title={title}></Button>
+    );
+  }
+
+  _goToURL() {
+    const { url } = this.props;
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(this.props.url);
+      } else {
+        console.log('Don\'t know how to open URI: ' + this.props.url);
+      }
+    });
   }
 }
 
@@ -119,7 +160,7 @@ export default class HomeScreen extends React.Component {
             <Page navigation={this.props.navigation} content={"Page 2"} linkText={"Go to personal skills"} linkPath={"PersonalSkills"}/>
           </View>
           <View style={styles.pageStyle2}>
-            <SoundPage  content={"Page 3"}></SoundPage>
+            <SoundPage content={"Sound test"}></SoundPage>
           </View>
 
         </ScrollView>
@@ -176,5 +217,11 @@ const styles = StyleSheet.create({
   },
   buttons:{
     paddingBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    color: '#FFF',
+    textDecorationLine: 'underline',
+    fontWeight: 'bold'
   }
 });
