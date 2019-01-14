@@ -87,8 +87,12 @@ class SoundPage extends React.Component{
       <View style={styles.headingContainer}>
       <Text style={styles.headingText}>{this.props.content}</Text>
       <Text style={styles.headingSubText}>Lorem ipsum</Text>
-      <Button style={styles.button} onPress={playSound} title="Play"></Button>
-      <Button style={styles.button} onPress={stopSound} title="Stop"></Button>
+      <View style={styles.buttons}>
+        <Button onPress={playSound} title="Play"></Button>
+      </View>
+      <View style={styles.buttons}>
+        <Button style={styles.buttons} onPress={stopSound} title="Stop"></Button>
+      </View>
     </View>
 
     )
@@ -170,8 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#a29bfe'
   },
-  button:{
-    paddingBottom: 50,
-    marginBottom: 50
+  buttons:{
+    paddingBottom: 10,
   }
 });
