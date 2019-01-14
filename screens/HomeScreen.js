@@ -10,7 +10,7 @@ import {
   Linking
 } from 'react-native';
 
-
+import {Audio} from 'expo';
 
 class Page1 extends React.Component{
   render(){
@@ -54,11 +54,19 @@ class SoundPage extends React.Component{
 
     const playSound = async () => {
       try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+          playsInSilentModeIOS: true,
+          shouldDuckAndroid: false,
+          playThroughEarpieceAndroid: false,
+          interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+        });
          soundObject = new Expo.Audio.Sound();
          await soundObject.loadAsync(require('../assets/audio/test.wav'));
          await soundObject.playAsync();
       } catch (error) {
-        // An error occurred!
+        console.log('Cannot play sound. Error = ', error)
       }
     };
     const stopSound = async () => {
@@ -163,7 +171,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
         </ScrollView>
-        
+
     );
   }
 }
