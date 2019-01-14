@@ -5,14 +5,11 @@ import {
   Text,
   View,
   Button,
+  ScrollView,
+  Dimensions
 } from 'react-native';
 
-import Swiper from 'react-native-swiper'
 
-import { WebBrowser } from 'expo';
-
-import { MonoText } from '../components/StyledText';
-import { primaryText, homeBackground } from '../constants/Colors';
 
 class Page1 extends React.Component{
   render(){
@@ -49,14 +46,65 @@ class Page extends React.Component{
 }
 
 
+class SoundPage extends React.Component{
+  render(){
+
+    let soundObject = new Expo.Audio.Sound();
+
+    const playSound = async () => {
+      try {
+         soundObject = new Expo.Audio.Sound();
+         await soundObject.loadAsync(require('../assets/audio/test.wav'));
+         await soundObject.playAsync();
+      } catch (error) {
+        // An error occurred!
+      }
+    };
+    const stopSound = async () => {
+      try {
+         await soundObject.stopAsync();
+      } catch (error) {
+        // An error occurred!
+      }
+    };
+    const pauseSound = async () => {
+      try {
+         await soundObject.pauseAsync();
+      } catch (error) {
+        // An error occurred!
+      }
+    };
+    const resumeSound = async () => {
+      try {
+         await soundObject.replayAsync();
+  
+      } catch (error) {
+        // An error occurred!
+      }
+    };
+    return (
+
+      <View style={styles.headingContainer}>
+      <Text style={styles.headingText}>{this.props.content}</Text>
+      <Text style={styles.headingSubText}>Lorem ipsum</Text>
+      <Button style={styles.button} onPress={playSound} title="Play"></Button>
+      <Button style={styles.button} onPress={stopSound} title="Stop"></Button>
+    </View>
+
+    )
+  }
+}
+
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
-
   render() {
+
     return (
-      <Swiper style={styles.container} showsButtons>
+      <View style={styles.container}>
+      <ScrollView contentContainerStyle={{flexGrow:1}}>
           <View style={styles.pageStyle1}>
             <Page1/>
           </View>
@@ -67,25 +115,21 @@ export default class HomeScreen extends React.Component {
             <Page navigation={this.props.navigation} content={"Page 2"} linkText={"Go to personal skills"} linkPath={"PersonalSkills"}/>
           </View>
           <View style={styles.pageStyle2}>
-            <Page navigation={this.props.navigation} content={"Page 3"} linkText={"Go to Home"} linkPath={"Diary"}/>
+            <SoundPage  content={"Page 3"}></SoundPage>
           </View>
-          <View style={styles.pageStyle1}>
-            <Page navigation={this.props.navigation} content={"Page 4"} linkText={"Go to diary"} linkPath={"Diary"}/>
-          </View>
-        </Swiper>
-      
-      // <ScrollView>
-      // </ScrollView>
+
+        </ScrollView>
+        </View>
+
     );
   }
 }
 
-
+var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#9bbee4',
@@ -95,7 +139,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   headingContainer: {
-    flex: 1,
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -113,11 +157,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   pageStyle1: {
-    flex: 1,
+    flex:1,
+    height: height,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#9bbee4'
   },
   pageStyle2: {
-    flex: 1,
+    flex:1,
+    height: height,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#a29bfe'
   },
+  button:{
+    paddingBottom: 50,
+    marginBottom: 50
+  }
 });
